@@ -1,0 +1,6 @@
+@SiniestroCentralizadoGtoApi_HostAddress = http://localhost:5135
+
+GET {{SiniestroCentralizadoGtoApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
