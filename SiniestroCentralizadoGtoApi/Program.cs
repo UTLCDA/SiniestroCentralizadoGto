@@ -12,11 +12,27 @@ builder.Services.AddScoped<IPolizaServices, PolizaServices>();
 builder.Services.AddScoped<IReporteServices, ReporteServices>();
 
 builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMyOrigin", policy =>
+    {
+        // Permitir solicitudes desde tu frontend
+        policy.WithOrigins("https://localhost:7261") // Asegúrate de que sea el origen correcto
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors("AllowMyOrigin");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

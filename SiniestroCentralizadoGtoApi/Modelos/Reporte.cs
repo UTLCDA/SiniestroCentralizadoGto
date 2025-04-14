@@ -19,7 +19,7 @@ public partial class Reporte
 
     public int? SucursalId { get; set; }
 
-    public DateOnly FechaSiniestro { get; set; }
+    public DateTime FechaSiniestro { get; set; }
 
     public string? LugarSiniestroDireccion { get; set; }
 

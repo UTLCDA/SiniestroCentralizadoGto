@@ -31,10 +31,12 @@
                     <th scope="col">Fecha Inicio Vigencia</th>
                     <th scope="col">Fecha Fin Vigencia</th>
                     <th scope="col">Fecha Emisión</th>
+                    <th scope="col">Último Pago</th>
                     <th scope="col">Estatus</th>
                     <th scope="col">Periodicidad</th>
-                    <th scope="col">Vehículo</th>
-                    <th scope="col">Último Pago</th>
+                    <th scope="col">Modelo</th>
+                    <th scope="col">Placas</th>
+                    <th scope="col">Número Serie</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,23 +46,26 @@
                         <td>@item.NumeroPoliza</td>
                         <td>@item.Beneficiario</td>
                         <td>@item.LineaNegocio</td>
-                        <td>@item.OficinaEmisionId</td>
-                        <td>@item.ContratanteId</td>
+                        <td>@item.OficinaEmision?.Nombre</td>
+                        <td>@(item.Contratante?.Nombre + " " + item.Contratante?.ApellidoMaterno + " " + item.Contratante?.ApellidoMaterno)</td>
                         <td>@item.FechaInicioVigencia.ToString("dd/MM/yyyy")</td>
                         <td class="@(item.FechaFinVigencia < DateOnly.FromDateTime(DateTime.Today) ? "text-danger fw-bold" : "")">
                             @item.FechaFinVigencia.ToString("dd/MM/yyyy")
                         </td>
                         <td>@item.FechaEmision.ToString("dd/MM/yyyy")</td>
-                        <td class="@(item.Estatus == "Pagado" ? "text-success fw-bold" : item.Estatus == "Pendiente" ? "text-warning fw-bold" : "")">
-                            @item.Estatus
-                        </td>
-                        <td>@item.PeriodicidadId</td>
-                        <td>@item.VehiculoId</td>
                         <td>
                             @(item.UltimoPago.HasValue && item.UltimoPago.Value != new DateOnly(1900, 1, 1)
                                 ? item.UltimoPago.Value.ToString("dd/MM/yyyy")
                                 : "")
                         </td>
+                        <td class="@(item.Estatus == "Pagado" ? "text-success fw-bold" : item.Estatus == "Pendiente" ? "text-warning fw-bold" : "")">
+                            @item.Estatus
+                        </td>
+                        <td>@item.Periodicidad?.Tipo</td>
+                        <td>@item.Vehiculo?.Modelo</td>
+                        <td>@item.Vehiculo?.Placas</td>
+                        <td>@item.Vehiculo?.NumeroSerie</td>
+                       
                     </tr>
                 }
             </tbody>

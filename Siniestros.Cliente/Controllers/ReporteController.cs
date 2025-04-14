@@ -42,7 +42,7 @@ namespace Siniestros.Cliente.Controllers
         {
             reporte.AjustadorId = 1;
                 //HttpContext.Session.GetInt32("AjustadorId");
-            var endPointValidaPoliza = $"api/Poliza/NumeroPoliza?numeroPoliza={reporte.PolizaId}";
+            var endPointValidaPoliza = $"api/Poliza/NumeroPolizaLinq?cadena={reporte.PolizaId}";
             var respuestaPoliza = await _httpClient.GetAsync(endPointValidaPoliza);
             var Estatus = String.Empty;
             DateOnly? FechaInicioPoliza = null;
@@ -50,6 +50,9 @@ namespace Siniestros.Cliente.Controllers
             DateOnly? UltimoPago = null;
             bool esVigente = false;
             bool confirmacionReporte = false;
+            DateTime FechaSiniestroNow = DateTime.Now;
+
+            
 
             if (respuestaPoliza.IsSuccessStatusCode)
             {
@@ -67,9 +70,16 @@ namespace Siniestros.Cliente.Controllers
                     return View(reporte); // mensaje personalizado de que su poliza 
                     // hace falta el pago correspondiente de su poliza {} su ultima fecha de pago fue {}
                 }
-                if (reporte.FechaSiniestro >= FechaInicioPoliza && reporte.FechaSiniestro <= FechaFinPoliza && Estatus.ToUpper() == "PAGADA")
+
+                if (FechaInicioPoliza.HasValue && FechaFinPoliza.HasValue && Estatus.ToUpper() == "PAGADA")
                 {
-                    esVigente = true;
+                    DateTime inicio = FechaInicioPoliza.Value.ToDateTime(TimeOnly.MinValue);
+                    DateTime fin = FechaFinPoliza.Value.ToDateTime(TimeOnly.MaxValue);
+
+                    if (reporte.FechaSiniestro >= inicio && reporte.FechaSiniestro <= fin)
+                    {
+                        esVigente = true;
+                    }
                 }
                 else
                 {
@@ -84,6 +94,10 @@ namespace Siniestros.Cliente.Controllers
 
             if (ModelState.IsValid)
             {
+                if (FechaSiniestroNow.ToString("dd/MM/yyyy") == reporte.FechaSiniestro.ToString("dd/MM/yyyy"))
+                {
+                    reporte.FechaSiniestro = FechaSiniestroNow;
+                }
                 var json = JsonConvert.SerializeObject(reporte);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 

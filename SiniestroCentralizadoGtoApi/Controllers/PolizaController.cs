@@ -55,15 +55,15 @@ namespace Siniestro.Servidor.Controllers
             return Ok(poliza);
         }
 
-        [HttpGet("NumeroPoliza2")]
-        public async Task<IActionResult> GetNumeroPolizaVistaSql([FromQuery] string numeroPoliza)
+        [HttpGet("NumeroPolizaLinq")]
+        public async Task<IActionResult> GetNumeroPolizaVistaSql([FromQuery] string cadena)
         {
-            if (string.IsNullOrEmpty(numeroPoliza))
+            if (string.IsNullOrEmpty(cadena))
             {
                 return BadRequest("El número de poliza es requerido.");
             }
 
-            var poliza = await _polizaService.BuscarPolizaPorVistaAsync(numeroPoliza);
+            var poliza = await _polizaService.BuscarPolizaPorNumeroPolizaRelacionAsync(cadena);
             return Ok(poliza);
         }
     }

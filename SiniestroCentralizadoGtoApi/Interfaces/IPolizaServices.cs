@@ -8,6 +8,7 @@ namespace Siniestro.Servidor.Interfaces
         //Task<Poliza> CrearAsync(Poliza poliza); // SIEMPRE Y CUANDO SEA PERFIL ADMON O EJECUTIVO
         Task<IEnumerable<Poliza>> BuscarPolizaPorNombreAsync(string nombreLike);
         Task<IEnumerable<Poliza>> BuscarPolizaPorNumeroPolizaAsync(string numeroPoliza);
+        Task<IEnumerable<Poliza>> BuscarPolizaPorNumeroPolizaRelacionAsync(string cadena);
         Task<IEnumerable<Poliza>> BuscarPolizaPorVistaAsync(string numeroPoliza);
     }
 }

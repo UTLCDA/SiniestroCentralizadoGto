@@ -20,26 +20,26 @@
 
             <div class="form-group mb-3">
                 <label asp-for="ContratanteId" class="form-label">Contratante</label>
-                <select asp-for="ContratanteId" class="form-control" asp-items="ViewBag.Contratantes" id="selectContratante"></select>
+                <input asp-for="ContratanteId" class="form-control" id="inputContratante" />
                 <span asp-validation-for="ContratanteId" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
                 <label asp-for="VehiculoId" class="form-label">Vehículo</label>
-                <select asp-for="VehiculoId" class="form-control" asp-items="ViewBag.Vehiculos" id="selectVehiculo"></select>
+                <input asp-for="VehiculoId" class="form-control" id="inputVehiculo" />
                 <span asp-validation-for="VehiculoId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="SucursalId" class="form-label">Sucursal</label>
+                <input asp-for="SucursalId" class="form-control" id="inputSucursal" />
+                <span asp-validation-for="SucursalId" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
                 <label asp-for="AjustadorId" class="form-label">Ajustador</label>
                 <select asp-for="AjustadorId" class="form-control" id="AjustadorId" value ="1" disabled></select>
                 <span asp-validation-for="AjustadorId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="SucursalId" class="form-label">Sucursal</label>
-                <select asp-for="SucursalId" class="form-control" asp-items="ViewBag.Sucursales" id="selectSucursal"></select>
-                <span asp-validation-for="SucursalId" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
@@ -163,12 +163,10 @@
                 })
                 .then(data => {
                     if (data) {
-                        alert("Póliza encontrada:\n" + JSON.stringify(data));
-
-                        // Asignar valores a los select
-                        setSelectedOption("selectContratante", data.contratanteId);
-                        setSelectedOption("selectVehiculo", data.vehiculoId);
-                        setSelectedOption("selectSucursal", data.sucursalId);
+                        const poliza = data[0]; 
+                        document.getElementById("inputContratante").value = poliza.contratanteId;
+                        document.getElementById("inputVehiculo").value = poliza.vehiculoId;
+                        document.getElementById("inputSucursal").value = poliza.oficinaEmisionId;
                     } else {
                         alert("No se encontró la póliza.");
                     }

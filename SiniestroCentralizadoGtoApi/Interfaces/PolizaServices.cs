@@ -15,7 +15,12 @@ namespace Siniestro.Servidor.Interfaces
 
         public async Task<IEnumerable<Poliza>> ObtenerTodosAsync()
         {
-            return await _context.Poliza.ToListAsync();
+            return await _context.Poliza
+            .Include(p => p.Contratante)     // Incluye la entidad Contratante
+            .Include(p => p.Vehiculo)        // Incluye la entidad Vehiculo
+            .Include(p => p.OficinaEmision)  // Incluye la entidad OficinaEmision
+            .Include(p => p.Periodicidad)    // Incluye la entidad Periodicidad
+            .ToListAsync();     
         }
 
         public async Task<Poliza> ObtenerPorIdAsync(int id)
@@ -25,11 +30,26 @@ namespace Siniestro.Servidor.Interfaces
 
         public async Task<IEnumerable<Poliza>> BuscarPolizaPorNombreAsync(string nombreLike)
         {
-            var sql = $"SELECT * FROM Poliza WHERE Beneficiario like '%{nombreLike}%'";
             return await _context.Poliza
-                                 .FromSqlRaw(sql, nombreLike)
-                                 .ToListAsync();
+            .Where(p => p.Beneficiario.Contains(nombreLike))
+            .Include(p => p.Contratante)
+            .Include(p => p.Vehiculo)
+            .Include(p => p.OficinaEmision)
+            .Include(p => p.Periodicidad)
+            .ToListAsync();
         }
+
+        public async Task<IEnumerable<Poliza>> BuscarPolizaPorNumeroPolizaRelacionAsync(string cadena)
+        {
+            return await _context.Poliza
+                .Where(p => p.NumeroPoliza.Contains(cadena))
+                .Include(p => p.Contratante)
+                .Include(p => p.Vehiculo)
+                .Include(p => p.OficinaEmision)
+                .Include(p => p.Periodicidad)
+                .ToListAsync();
+        }
+
 
         public async Task<IEnumerable<Poliza>> BuscarPolizaPorNumeroPolizaAsync(string numeroPoliza)
         {

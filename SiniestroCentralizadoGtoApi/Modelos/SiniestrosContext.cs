@@ -219,7 +219,7 @@ public partial class SiniestrosContext : DbContext
 
             entity.Property(e => e.ContratanteId);
             entity.Property(e => e.VehiculoId);
-            entity.Property(e => e.FechaSiniestro).HasColumnType("date");
+            entity.Property(e => e.FechaSiniestro).HasColumnType("datetime");
 
             entity.Property(e => e.LugarSiniestroDireccion)
                 .HasMaxLength(255)
