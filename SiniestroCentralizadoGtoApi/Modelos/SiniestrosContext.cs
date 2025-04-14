@@ -25,7 +25,7 @@ public partial class SiniestrosContext : DbContext
 
     public virtual DbSet<Reporte> Reporte { get; set; }
 
-    public virtual DbSet<SeguimientoSiniestro> SeguimientoSiniestro { get; set; }
+    //public virtual DbSet<SeguimientoSiniestro> SeguimientoSiniestro { get; set; }
 
     public virtual DbSet<SolicitudContratante> SolicitudContratante { get; set; }
 
@@ -175,9 +175,15 @@ public partial class SiniestrosContext : DbContext
             entity.Property(e => e.LineaNegocio)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+
+            //entity.HasIndex(e => e.NumeroPoliza)
+            // .IsUnique(); // Asegura que pueda ser usada como clave principal lógica
+            entity.HasAlternateKey(e => e.NumeroPoliza); // <- necesario si vas a usarlo como FK desde Reporte
+
+
             entity.Property(e => e.NumeroPoliza)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+              .IsRequired()
+              .HasMaxLength(50);
 
             entity.HasOne(d => d.Contratante).WithMany(p => p.Polizas)
                 .HasForeignKey(d => d.ContratanteId)
@@ -198,62 +204,134 @@ public partial class SiniestrosContext : DbContext
 
         modelBuilder.Entity<Reporte>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Reporte__3214EC07FF5ADEB9");
+            entity.HasKey(e => e.Id).HasName("PK__Reporte__3214EC0766D26F4A");
 
             entity.ToTable("Reporte");
 
-            entity.Property(e => e.CorreoElectronico)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.DescripcionSiniestro).HasColumnType("text");
-            entity.Property(e => e.LugarSiniestroCoordenadas)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("LugarSiniestro_Coordenadas");
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            entity.Property(e => e.SucursalId);
+            //entity.Property(e => e.PolizaId);
+
+            entity.Property(e => e.PolizaId)
+              .IsRequired()
+              .HasMaxLength(50);
+
+            entity.Property(e => e.ContratanteId);
+            entity.Property(e => e.VehiculoId);
+            entity.Property(e => e.FechaSiniestro).HasColumnType("date");
+
             entity.Property(e => e.LugarSiniestroDireccion)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("LugarSiniestro_Direccion");
-            entity.Property(e => e.ObservacionesAjustador).HasColumnType("text");
-            entity.Property(e => e.TelefonoContacto)
-                .HasMaxLength(20)
+
+            entity.Property(e => e.LugarSiniestroCoordenadas)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("LugarSiniestro_Coordenadas");
+
+            entity.Property(e => e.Taller)
+                .HasMaxLength(100)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.Ajustador).WithMany(p => p.Reportes)
-                .HasForeignKey(d => d.AjustadorId)
-                .HasConstraintName("FK_Reporte_Ajustador");
-
-            entity.HasOne(d => d.NombreReporte).WithMany(p => p.Reportes)
-                .HasForeignKey(d => d.NombreReporteId)
-                .HasConstraintName("FK_Reporte_TipoPersona");
-
-            entity.HasOne(d => d.Vehiculo).WithMany(p => p.Reportes)
-                .HasForeignKey(d => d.VehiculoId)
-                .HasConstraintName("FK_Reporte_Vehiculo");
-        });
-
-        modelBuilder.Entity<SeguimientoSiniestro>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Seguimie__3214EC07506E599C");
-
-            entity.ToTable("SeguimientoSiniestro");
-
-            entity.Property(e => e.Comentarios).HasColumnType("text");
-            entity.Property(e => e.NombreAjustador)
-                .HasMaxLength(150)
+            entity.Property(e => e.Responsable)
+                .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.NumeroPolizaAfectado)
+
+            entity.Property(e => e.NumSiniestro);
+
+            entity.Property(e => e.FolioReporte)
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.NumeroAjustadorAltaNavigation).WithMany(p => p.SeguimientoSiniestros)
-                .HasForeignKey(d => d.NumeroAjustadorAlta)
-                .HasConstraintName("FK_Seguimiento_Ajustador");
+            entity.Property(e => e.TelefonoPropietrio)
+                .HasMaxLength(20)
+                .IsUnicode(false);
 
-            entity.HasOne(d => d.NumeroSiniestro).WithMany(p => p.SeguimientoSiniestros)
-                .HasForeignKey(d => d.NumeroSiniestroId)
-                .HasConstraintName("FK_Seguimiento_Reporte");
+            entity.Property(e => e.NombreAsegurado)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.Property(e => e.NombrePropietario)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.Property(e => e.AplicaDeducible);
+
+            entity.Property(e => e.PorcentajeDeducible)
+                .HasColumnType("decimal(5, 2)");
+
+            entity.Property(e => e.DescripcionSiniestro)
+                .HasColumnType("text");
+
+            entity.Property(e => e.ObservacionesAjustador)
+                .HasColumnType("text");
+
+            entity.Property(e => e.AjustadorId);
+
+            // Relaciones (Foreign Keys)
+            entity.HasOne(d => d.Sucursal)
+                .WithMany()
+                .HasForeignKey(d => d.SucursalId)
+                .HasConstraintName("FK_Reporte_Sucursal");
+
+            entity.HasOne(d => d.Poliza)
+            .WithMany(p => p.Reportes)
+            .HasForeignKey(d => d.PolizaId)
+            .HasPrincipalKey(p => p.NumeroPoliza);
+
+
+        entity.HasOne(d => d.Contratante)
+                .WithMany()
+                .HasForeignKey(d => d.ContratanteId)
+                .HasConstraintName("FK_Reporte_Contratante");
+
+            //entity.HasOne(d => d.Vehiculo)
+            //    .WithMany()
+            //    .HasForeignKey(d => d.VehiculoId)
+            //    .HasConstraintName("FK_Reporte_Vehiculo");
+
+            entity.HasOne(e => e.Vehiculo)
+    .WithMany(v => v.Reportes)
+    .HasForeignKey(e => e.VehiculoId)
+    .HasConstraintName("FK_Reporte_Vehiculo")
+    .OnDelete(DeleteBehavior.Restrict);
+
+            //entity.HasOne(d => d.Ajustador)
+            //    .WithMany()
+            //    .HasForeignKey(d => d.AjustadorId)
+            //    .HasConstraintName("FK_Reporte_Ajustador");
+
+            entity.HasOne(e => e.Ajustador)
+            .WithMany(a => a.Reportes)
+            .HasForeignKey(e => e.AjustadorId)
+            .HasConstraintName("FK_Reporte_Ajustador")
+            .OnDelete(DeleteBehavior.Restrict);
         });
+
+        //modelBuilder.Entity<SeguimientoSiniestro>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__Seguimie__3214EC07506E599C");
+
+        //    entity.ToTable("SeguimientoSiniestro");
+
+        //    entity.Property(e => e.Comentarios).HasColumnType("text");
+        //    entity.Property(e => e.NombreAjustador)
+        //        .HasMaxLength(150)
+        //        .IsUnicode(false);
+        //    entity.Property(e => e.NumeroPolizaAfectado)
+        //        .HasMaxLength(50)
+        //        .IsUnicode(false);
+
+        //    entity.HasOne(d => d.NumeroAjustadorAltaNavigation).WithMany(p => p.SeguimientoSiniestros)
+        //        .HasForeignKey(d => d.NumeroAjustadorAlta)
+        //        .HasConstraintName("FK_Seguimiento_Ajustador");
+
+        //    entity.HasOne(d => d.NumeroSiniestro).WithMany(p => p.SeguimientoSiniestros)
+        //        .HasForeignKey(d => d.NumeroSiniestroId)
+        //        .HasConstraintName("FK_Seguimiento_Reporte");
+        //});
 
         modelBuilder.Entity<SolicitudContratante>(entity =>
         {

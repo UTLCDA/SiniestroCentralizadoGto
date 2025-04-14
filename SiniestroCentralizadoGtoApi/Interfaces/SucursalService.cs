@@ -49,7 +49,7 @@ namespace Siniestro.Servidor.Interfaces
 
         public async Task<IEnumerable<Sucursal>> ObtenerSucursalesConCodigoPostalAsync(string codigoPostal)
         {
-            var sql = "SELECT * FROM Sucursal WHERE CodigoPostal = {0}";
+            var sql = $"SELECT * FROM Sucursal WHERE CodigoPostal = {0}";
             return await _context.Sucursal
                                  .FromSqlRaw(sql, codigoPostal)
                                  .ToListAsync();

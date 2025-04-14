@@ -37,5 +37,7 @@ namespace Siniestros.Cliente.Models
         public virtual Periodicidad? Periodicidad { get; set; }
 
         public virtual Vehiculo? Vehiculo { get; set; }
+
+        public virtual ICollection<Reporte> Reportes { get; set; }
     }
 }

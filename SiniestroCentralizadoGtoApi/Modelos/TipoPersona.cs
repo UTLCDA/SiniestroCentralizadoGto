@@ -9,6 +9,4 @@ public partial class TipoPersona
     public int Id { get; set; }
 
     public string? Descripcion { get; set; }
-    [JsonIgnore]
-    public virtual ICollection<Reporte> Reportes { get; set; } = new List<Reporte>();
 }

@@ -38,6 +38,7 @@ namespace Siniestros.Cliente.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Alta(Sucursal sucursal)
         {

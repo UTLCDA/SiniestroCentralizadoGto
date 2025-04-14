@@ -1,0 +1,93 @@
+﻿@model IEnumerable<ReporteVistaModelo>
+
+@{
+    ViewData["Title"] = "Listado de Reportes";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive mt-4 shadow rounded-4">
+        <table class="table table-striped table-hover align-middle text-center mb-0">
+            <thead class="table-primary">
+                <tr>
+                    <th>Número Reporte</th>
+                    <th>Sucursal Poliza</th>
+                    <th>Numero Póliza</th>
+                    <th>Contratante</th>
+                    <th>Tipo Vehiculo</th>
+                    <th>Placas</th>
+                    <th>Color</th>
+                    <th>Fecha Siniestro</th>
+                    <th>Dirección Siniestro</th>
+                    <th>Taller</th>
+                    <th>Responsable Taller</th>
+                    <th>Número Siniestro</th>
+                    <th>Folio Reporte</th>
+                    <th>Tel. Propietario</th>
+                    <th>Correo Electronico</th>
+                    <th>Asegurado</th>
+                    <th>Propietario Vehiculo</th>
+                    <th>Deducible</th>
+                    <th>% Deducible</th>
+                    <th>Descripción</th>
+                    <th>Ajustador</th>
+                    <th>Observaciones Ajustador</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reporte in Model)
+                {
+                    <tr>
+                        <td>@reporte.Id</td>
+                        <td>@reporte.Sucursal?.Nombre</td>
+                        <td>@reporte.PolizaId</td>
+                        <td>
+                            @($"{reporte.Contratante?.Nombre} {reporte.Contratante?.ApellidoPaterno} {reporte.Contratante?.ApellidoMaterno}")
+                        </td>
+                        <td>
+                            @{
+                                string tipoVehiculoNombre = reporte.Vehiculo?.IdTipoVehiculo switch
+                                {
+                                    1 => "Auto",
+                                    2 => "Camioneta",
+                                    3 => "Moto",
+                                    4 => "SUV",
+                                    5 => "Camión",
+                                    _ => "Desconocido"
+                                };
+                            }
+                            @tipoVehiculoNombre
+                        </td>
+                        <td>@reporte.Vehiculo?.Placas</td>
+                        <td>@reporte.Vehiculo?.Color</td>
+                        <td>@reporte.FechaSiniestro?.ToString("dd/MM/yyyy")</td>
+                        <td>@reporte.LugarSiniestroDireccion</td>
+                        <td>@reporte.Taller</td>
+                        <td>@reporte.Responsable</td>
+                        <td>@reporte.NumSiniestro</td>
+                        <td>@reporte.FolioReporte</td>
+                        <td>@reporte.TelefonoPropietrio</td>
+                        <td>@reporte.Contratante?.CorreoElectronico</td>
+                        <td>@reporte.NombreAsegurado</td>
+                        <td>
+                            @($"{reporte.Contratante?.Nombre} {reporte.Contratante?.ApellidoPaterno} {reporte.Contratante?.ApellidoMaterno}")
+                        </td>
+                        <td>@(reporte.AplicaDeducible == true ? "Sí" : "No")</td>
+                        <td>@reporte.PorcentajeDeducible?.ToString("P")</td>
+                        <td>@reporte.DescripcionSiniestro</td>
+                        <td>@reporte.Ajustador?.Nombre</td>
+                        <td>@reporte.ObservacionesAjustador</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        No hay reportes disponibles.
+    </div>
+}

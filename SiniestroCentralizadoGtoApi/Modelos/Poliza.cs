@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SiniestroCentralizadoGtoApi.Modelos;
 
@@ -11,7 +12,7 @@ public partial class Poliza
 
     public int? OficinaEmisionId { get; set; }
 
-    public string? NumeroPoliza { get; set; }
+    public string NumeroPoliza { get; set; }
 
     public int? ContratanteId { get; set; }
 
@@ -38,4 +39,6 @@ public partial class Poliza
     public virtual Periodicidad? Periodicidad { get; set; }
 
     public virtual Vehiculo? Vehiculo { get; set; }
+    [JsonIgnore]
+    public virtual ICollection<Reporte> Reportes { get; set; }
 }

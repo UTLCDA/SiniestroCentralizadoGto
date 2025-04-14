@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SiniestrosContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("cadenaSQL")));
 builder.Services.AddScoped<ISucursalServices, SucursalService>();
 builder.Services.AddScoped<IPolizaServices, PolizaServices>();
+builder.Services.AddScoped<IReporteServices, ReporteServices>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

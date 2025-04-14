@@ -45,16 +45,22 @@
                         <td>@item.Beneficiario</td>
                         <td>@item.LineaNegocio</td>
                         <td>@item.OficinaEmisionId</td>
-                        <td>@item.Contratante?.Nombre</td>
+                        <td>@item.ContratanteId</td>
                         <td>@item.FechaInicioVigencia?.ToString("dd/MM/yyyy")</td>
                         <td class="@(item.FechaFinVigencia < DateOnly.FromDateTime(DateTime.Today) ? "text-danger fw-bold" : "")">
                             @item.FechaFinVigencia?.ToString("dd/MM/yyyy")
                         </td>
                         <td>@item.FechaEmision?.ToString("dd/MM/yyyy")</td>
-                        <td>@item.Estatus</td>
+                        <td class="@(item.Estatus == "Pagado" ? "text-success fw-bold" : item.Estatus == "Pendiente" ? "text-warning fw-bold" : "")">
+                            @item.Estatus
+                        </td>
                         <td>@item.PeriodicidadId</td>
                         <td>@item.VehiculoId</td>
-                        <td>@item.UltimoPago?.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @(item.UltimoPago.HasValue && item.UltimoPago.Value != new DateOnly(1900, 1, 1)
+                                ? item.UltimoPago.Value.ToString("dd/MM/yyyy")
+                                : "")
+                        </td>
                     </tr>
                 }
             </tbody>
