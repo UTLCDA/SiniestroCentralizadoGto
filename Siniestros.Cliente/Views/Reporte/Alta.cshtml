@@ -1,0 +1,183 @@
+﻿@model SiniestroCentralizadoGtoApi.Modelos.Reporte
+
+@{
+    ViewData["Title"] = "Alta de Siniestro";
+}
+
+<div class="container mt-4">
+    <div class="card shadow rounded p-4">
+        <form asp-action="Alta" method="post">
+
+            <div class="form-group mb-3">
+                <label asp-for="PolizaId" class="form-label">Póliza</label>
+                <input asp-for="PolizaId" class="form-control" placeholder="ID de Póliza" id="inputPoliza" />
+                <span asp-validation-for="PolizaId" class="text-danger"></span>
+
+                <div class="mt-2">
+                    <button type="button" class="btn btn-info btn-sm" onclick="consultarPoliza()">🔍 Consultar Póliza</button>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ContratanteId" class="form-label">Contratante</label>
+                <select asp-for="ContratanteId" class="form-control" asp-items="ViewBag.Contratantes" id="selectContratante"></select>
+                <span asp-validation-for="ContratanteId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="VehiculoId" class="form-label">Vehículo</label>
+                <select asp-for="VehiculoId" class="form-control" asp-items="ViewBag.Vehiculos" id="selectVehiculo"></select>
+                <span asp-validation-for="VehiculoId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="AjustadorId" class="form-label">Ajustador</label>
+                <select asp-for="AjustadorId" class="form-control" id="AjustadorId" value ="1" disabled></select>
+                <span asp-validation-for="AjustadorId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="SucursalId" class="form-label">Sucursal</label>
+                <select asp-for="SucursalId" class="form-control" asp-items="ViewBag.Sucursales" id="selectSucursal"></select>
+                <span asp-validation-for="SucursalId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="FechaSiniestro" class="form-label">Fecha del Siniestro</label>
+                <input asp-for="FechaSiniestro" class="form-control" type="date" />
+                <span asp-validation-for="FechaSiniestro" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="LugarSiniestroDireccion" class="form-label">Dirección del Siniestro</label>
+                <input asp-for="LugarSiniestroDireccion" class="form-control" />
+                <span asp-validation-for="LugarSiniestroDireccion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="LugarSiniestroCoordenadas" class="form-label">Coordenadas del Siniestro</label>
+                <input asp-for="LugarSiniestroCoordenadas" class="form-control" />
+                <span asp-validation-for="LugarSiniestroCoordenadas" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Taller" class="form-label">Taller</label>
+                <input asp-for="Taller" class="form-control" />
+                <span asp-validation-for="Taller" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Responsable" class="form-label">Responsable</label>
+                <input asp-for="Responsable" class="form-control" />
+                <span asp-validation-for="Responsable" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NumSiniestro" class="form-label">Número de Siniestro</label>
+                <input asp-for="NumSiniestro" class="form-control" />
+                <span asp-validation-for="NumSiniestro" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="FolioReporte" class="form-label">Folio de Reporte</label>
+                <input asp-for="FolioReporte" class="form-control" />
+                <span asp-validation-for="FolioReporte" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="TelefonoPropietrio" class="form-label">Teléfono del Propietario</label>
+                <input asp-for="TelefonoPropietrio" class="form-control" />
+                <span asp-validation-for="TelefonoPropietrio" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NombreAsegurado" class="form-label">Nombre del Asegurado</label>
+                <input asp-for="NombreAsegurado" class="form-control" />
+                <span asp-validation-for="NombreAsegurado" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NombrePropietario" class="form-label">Nombre del Propietario</label>
+                <input asp-for="NombrePropietario" class="form-control" />
+                <span asp-validation-for="NombrePropietario" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mb-3">
+                <input asp-for="AplicaDeducible" class="form-check-input" />
+                <label asp-for="AplicaDeducible" class="form-check-label">¿Aplica deducible?</label>
+                <span asp-validation-for="AplicaDeducible" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PorcentajeDeducible" class="form-label">Porcentaje del Deducible</label>
+                <input asp-for="PorcentajeDeducible" class="form-control" />
+                <span asp-validation-for="PorcentajeDeducible" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DescripcionSiniestro" class="form-label">Descripción del Siniestro</label>
+                <textarea asp-for="DescripcionSiniestro" class="form-control"></textarea>
+                <span asp-validation-for="DescripcionSiniestro" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ObservacionesAjustador" class="form-label">Observaciones del Ajustador</label>
+                <textarea asp-for="ObservacionesAjustador" class="form-control"></textarea>
+                <span asp-validation-for="ObservacionesAjustador" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mb-4">
+                <input asp-for="EsCorrecto" class="form-check-input" />
+                <label asp-for="EsCorrecto" class="form-check-label">¿Es Correcto?</label>
+                <span asp-validation-for="EsCorrecto" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">← Cancelar</a>
+                <button type="submit" class="btn btn-primary">✅ Guardar Siniestro</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        function consultarPoliza() {
+            debugger
+            const polizaId = document.getElementById('inputPoliza').value;
+            if (!polizaId) {
+                alert("Por favor, ingresa un ID de Póliza válido.");
+                return;
+            }
+
+            // Aquí podrías hacer una llamada AJAX, por ejemplo con fetch:
+            fetch(`https://localhost:7102/api/Poliza/NumeroPoliza?numeroPoliza=${polizaId}`)
+                .then(response => {
+                    // Verificar si la respuesta es exitosa (status 200)
+                    if (!response.ok) {
+                        throw new Error('No se pudo obtener la póliza. Código de error: ' + response.status);
+                    }
+                    return response.json();  // Parsear la respuesta JSON
+                })
+                .then(data => {
+                    if (data) {
+                        alert("Póliza encontrada:\n" + JSON.stringify(data));
+
+                        // Asignar valores a los select
+                        setSelectedOption("selectContratante", data.contratanteId);
+                        setSelectedOption("selectVehiculo", data.vehiculoId);
+                        setSelectedOption("selectSucursal", data.sucursalId);
+                    } else {
+                        alert("No se encontró la póliza.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al consultar:", error);
+                    alert("Ocurrió un error al consultar la póliza.");
+                });
+        }
+    </script>
+
+}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace SiniestroCentralizadoGtoApi.Modelos;
@@ -18,7 +19,7 @@ public partial class Reporte
 
     public int? SucursalId { get; set; }
 
-    public DateOnly? FechaSiniestro { get; set; }
+    public DateOnly FechaSiniestro { get; set; }
 
     public string? LugarSiniestroDireccion { get; set; }
 
@@ -38,13 +39,15 @@ public partial class Reporte
 
     public string? NombrePropietario { get; set; }
 
-    public bool? AplicaDeducible { get; set; }
+    public bool AplicaDeducible { get; set; }
 
     public decimal? PorcentajeDeducible { get; set; }
 
     public string? DescripcionSiniestro { get; set; }
 
     public string? ObservacionesAjustador { get; set; }
+    [NotMapped]
+    public bool EsCorrecto { get; set; }
     public virtual Poliza? Poliza { get; set; }
     public virtual Contratante? Contratante { get; set; }
     public virtual Vehiculo? Vehiculo { get; set; }

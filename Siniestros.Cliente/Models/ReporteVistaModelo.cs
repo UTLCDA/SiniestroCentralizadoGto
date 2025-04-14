@@ -34,7 +34,7 @@ namespace Siniestros.Cliente.Models
 
         public string? NombrePropietario { get; set; }
 
-        public bool? AplicaDeducible { get; set; }
+        public bool AplicaDeducible { get; set; }
 
         public decimal? PorcentajeDeducible { get; set; }
 

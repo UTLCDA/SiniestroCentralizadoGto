@@ -46,11 +46,11 @@
                         <td>@item.LineaNegocio</td>
                         <td>@item.OficinaEmisionId</td>
                         <td>@item.ContratanteId</td>
-                        <td>@item.FechaInicioVigencia?.ToString("dd/MM/yyyy")</td>
+                        <td>@item.FechaInicioVigencia.ToString("dd/MM/yyyy")</td>
                         <td class="@(item.FechaFinVigencia < DateOnly.FromDateTime(DateTime.Today) ? "text-danger fw-bold" : "")">
-                            @item.FechaFinVigencia?.ToString("dd/MM/yyyy")
+                            @item.FechaFinVigencia.ToString("dd/MM/yyyy")
                         </td>
-                        <td>@item.FechaEmision?.ToString("dd/MM/yyyy")</td>
+                        <td>@item.FechaEmision.ToString("dd/MM/yyyy")</td>
                         <td class="@(item.Estatus == "Pagado" ? "text-success fw-bold" : item.Estatus == "Pendiente" ? "text-warning fw-bold" : "")">
                             @item.Estatus
                         </td>

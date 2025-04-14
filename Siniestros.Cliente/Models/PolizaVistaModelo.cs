@@ -16,17 +16,18 @@ namespace Siniestros.Cliente.Models
 
         public string? Beneficiario { get; set; }
 
-        public DateOnly? FechaInicioVigencia { get; set; }
+        public DateOnly FechaInicioVigencia { get; set; }
 
-        public DateOnly? FechaFinVigencia { get; set; }
+        public DateOnly FechaFinVigencia { get; set; }
 
-        public DateOnly? FechaEmision { get; set; }
+        public DateOnly FechaEmision { get; set; }
 
         public string? Estatus { get; set; }
 
         public int? PeriodicidadId { get; set; }
 
         public int? VehiculoId { get; set; }
+        public bool EsCorrecto { get; set; }
 
         public DateOnly? UltimoPago { get; set; }
 

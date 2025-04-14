@@ -28,7 +28,7 @@ namespace Siniestros.Cliente.Controllers
                 switch (tipoBusqueda)
                 {
                     case "NumeroPoliza":
-                        endpoint = $"api/Poliza/NumeroPoliza2?numeroPoliza={valorBusqueda}";
+                        endpoint = $"api/Poliza/NumeroPoliza?numeroPoliza={valorBusqueda}";
                         break;
                     case "NombreBeneficiario":
                         endpoint = $"api/Poliza/NombreBeneficiario?nombreLike={valorBusqueda}";
