@@ -2,6 +2,7 @@
 using Siniestro.Servidor.Dtos;
 using SiniestroCentralizadoGtoApi.Modelos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Siniestro.Servidor.Interfaces
 {
@@ -21,6 +22,11 @@ namespace Siniestro.Servidor.Interfaces
             var usuario = await _context.Usuario
                 .Include(u => u.NumeroEmpleadoNavigation) // Relación con Ajustador
                 .FirstOrDefaultAsync(u => u.NumeroEmpleado == loginRequest.NumeroEmpleado);
+
+            //if (usuario == null || !PasswordHash.VerifyPassword(loginRequest.Contrasena, usuario.Contrasena))
+            //{
+            //    throw new UnauthorizedAccessException("Credenciales incorrectas.");
+            //}
 
             if (usuario == null || usuario.Contrasena != loginRequest.Contrasena)
             {

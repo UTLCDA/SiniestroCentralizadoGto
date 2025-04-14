@@ -28,7 +28,10 @@ namespace Siniestro.Servidor.Controllers
             {
                 var usuario = await _usuarioService.LoginAsync(loginRequest);
 
-                // Si el login es exitoso, devolvemos la información del usuario
+                //var token = GenerarJwtToken(usuario);
+
+                //Response.Headers.Add("Authorization", $"Bearer {token}");
+
                 return Ok(usuario);
             }
             catch (UnauthorizedAccessException)
