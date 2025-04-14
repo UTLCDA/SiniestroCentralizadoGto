@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Siniestros.Cliente.Models;
@@ -37,6 +38,7 @@ namespace Siniestros.Cliente.Controllers
 
         public async Task<IActionResult> Login(LoginSolicitudVistaModelo model)
         {
+            
             // Aquí puedes ajustar el endpoint que valide usuario y password
             var response = await _httpClient.PostAsJsonAsync($"api/usuario/login",model);
 
@@ -47,8 +49,7 @@ namespace Siniestros.Cliente.Controllers
 
                 if (usuario != null)
                 {
-                    // Aquí puedes guardar datos en sesión si lo necesitas
-                    HttpContext.Session.SetString("Usuario", model.NumeroEmpleado);
+                    HttpContext.Session.SetInt32("IdUsuario", usuario.IdUsuario);
 
                     return RedirectToAction("Dashboard", "Home");
                 }
@@ -60,21 +61,17 @@ namespace Siniestros.Cliente.Controllers
         [HttpGet]
         public IActionResult Dashboard()
         {
-            var usuario = HttpContext.Session.GetString("Usuario");
-            if (string.IsNullOrEmpty(usuario))
-            {
-                // Puedes agregar un log o debugeo aquí
-                Debug.WriteLine("El valor de 'Usuario' es nulo o vacío.");
-            }
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Usuario")))
-                return RedirectToAction("Login");
+            
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario"); // Si lo necesitas
 
-            // Obtener el nombre del usuario desde la sesión
-            usuario = HttpContext.Session.GetString("Usuario");
+            if (!HttpContext.Session.GetInt32("IdUsuario").HasValue)
+            {
+                return RedirectToAction("Login");
+            }
 
             var viewModel = new DashboardVistaModelo
             {
-                Usuario = usuario
+                Usuario = idUsuario
             };
 
             return View(viewModel); // Pasas el viewModel a la vista

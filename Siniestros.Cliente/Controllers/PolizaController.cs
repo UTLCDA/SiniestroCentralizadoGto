@@ -20,7 +20,6 @@ namespace Siniestros.Cliente.Controllers
 
             if (string.IsNullOrEmpty(valorBusqueda))
             {
-                // Si no se busca nada, mostrar todo
                 endpoint = "api/Poliza/ListadoPolizas";
             }
             else

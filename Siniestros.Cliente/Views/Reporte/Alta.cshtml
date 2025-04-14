@@ -12,9 +12,9 @@
     </div>
 }
 
-<div class="container mt-4">
+<div class="container mt-4  mb-5">
     <div class="card shadow rounded p-4">
-        <form asp-action="Alta" id="formGuardarSiniestro" method="post">
+        <form asp-action="Alta"  method="post">
 
             <div class="form-group mb-3">
                 <label asp-for="PolizaId" class="form-label">Póliza</label>
@@ -28,25 +28,27 @@
 
             <div class="form-group mb-3">
                 <label asp-for="ContratanteId" class="form-label">Contratante</label>
-                <input asp-for="ContratanteId" class="form-control" id="inputContratante" />
+                <input asp-for="ContratanteId" class="form-control" id="inputContratante"  />
                 <span asp-validation-for="ContratanteId" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
                 <label asp-for="VehiculoId" class="form-label">Vehículo</label>
-                <input asp-for="VehiculoId" class="form-control" id="inputVehiculo" />
+                <input asp-for="VehiculoId" class="form-control" id="inputVehiculo"  />
                 <span asp-validation-for="VehiculoId" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
                 <label asp-for="SucursalId" class="form-label">Sucursal</label>
-                <input asp-for="SucursalId" class="form-control" id="inputSucursal" />
+                <input asp-for="SucursalId" class="form-control" id="inputSucursal"  />
                 <span asp-validation-for="SucursalId" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
                 <label asp-for="AjustadorId" class="form-label">Ajustador</label>
-                <select asp-for="AjustadorId" class="form-control" id="AjustadorId" value ="1" disabled></select>
+                <select asp-for="AjustadorId" class="form-control" id="AjustadorId" disabled>
+                    <option value="@Context.Session.GetInt32("IdUsuario")">@Context.Session.GetInt32("IdUsuario")</option>
+                </select>
                 <span asp-validation-for="AjustadorId" class="text-danger"></span>
             </div>
 
@@ -75,7 +77,7 @@
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="Responsable" class="form-label">Responsable</label>
+                <label asp-for="Responsable" class="form-label">Responsable Taller</label>
                 <input asp-for="Responsable" class="form-control" />
                 <span asp-validation-for="Responsable" class="text-danger"></span>
             </div>
@@ -94,7 +96,7 @@
 
             <div class="form-group mb-3">
                 <label asp-for="TelefonoPropietrio" class="form-label">Teléfono del Propietario</label>
-                <input asp-for="TelefonoPropietrio" class="form-control" />
+                <input asp-for="TelefonoPropietrio" class="form-control" id="inputTelefono" />
                 <span asp-validation-for="TelefonoPropietrio" class="text-danger"></span>
             </div>
 
@@ -106,7 +108,7 @@
 
             <div class="form-group mb-3">
                 <label asp-for="NombrePropietario" class="form-label">Nombre del Propietario</label>
-                <input asp-for="NombrePropietario" class="form-control" />
+                <input asp-for="NombrePropietario" class="form-control" id="inputNombrePropietario" />
                 <span asp-validation-for="NombrePropietario" class="text-danger"></span>
             </div>
 
@@ -142,14 +144,14 @@
 
             <div class="d-flex justify-content-between">
                 <a asp-action="Index" class="btn btn-secondary">← Cancelar</a>
-                <button type="submit" class="btn btn-primary">✅ Guardar Siniestro</button>
+                <button type="submit" class="btn btn-primary" >✅ Guardar Siniestro</button>
             </div>
         </form>
     </div>
 </div>
 
 
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+@* <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -165,7 +167,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> *@
 
 @section Scripts {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
@@ -180,7 +182,7 @@
             }
 
             // Aquí podrías hacer una llamada AJAX, por ejemplo con fetch:
-            fetch(`https://localhost:7102/api/Poliza/NumeroPoliza?numeroPoliza=${polizaId}`)
+            fetch(`https://localhost:7102/api/Poliza/NumeroPolizaLinq?cadena=${polizaId}`)
                 .then(response => {
                     // Verificar si la respuesta es exitosa (status 200)
                     if (!response.ok) {
@@ -190,10 +192,13 @@
                 })
                 .then(data => {
                     if (data) {
-                        const poliza = data[0]; 
+                        const poliza = data[0];
+                        const contratante = poliza.contratante;
                         document.getElementById("inputContratante").value = poliza.contratanteId;
                         document.getElementById("inputVehiculo").value = poliza.vehiculoId;
                         document.getElementById("inputSucursal").value = poliza.oficinaEmisionId;
+                        document.getElementById("inputTelefono").value = contratante.telefono;
+                        document.getElementById("inputNombrePropietario").value = contratante.nombre + " " + contratante.apellidoPaterno + " " + contratante.apellidoMaterno;
                     } else {
                         alert("No se encontró la póliza.");
                     }
@@ -204,10 +209,10 @@
                 });
         }
     </script>
-    <script>
+   @*  <script>
         function enviarFormulario() {
             document.getElementById('formGuardarSiniestro').submit();
         }
-    </script>
+    </script> *@
 
 }

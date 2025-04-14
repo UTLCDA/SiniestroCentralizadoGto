@@ -2,7 +2,7 @@
 {
     public class DashboardVistaModelo
     {
-        public string Usuario { get; set; }
+        public int? Usuario { get; set; }
 
     }
 }

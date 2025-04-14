@@ -40,8 +40,7 @@ namespace Siniestros.Cliente.Controllers
         [HttpPost]
         public async Task<IActionResult> Alta(Reporte reporte)
         {
-            reporte.AjustadorId = 1;
-                //HttpContext.Session.GetInt32("AjustadorId");
+            reporte.AjustadorId = HttpContext.Session.GetInt32("IdUsuario");
             var endPointValidaPoliza = $"api/Poliza/NumeroPolizaLinq?cadena={reporte.PolizaId}";
             var respuestaPoliza = await _httpClient.GetAsync(endPointValidaPoliza);
             var Estatus = String.Empty;
