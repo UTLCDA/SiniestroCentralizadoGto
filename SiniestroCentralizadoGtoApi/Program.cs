@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Siniestro.Servidor;
 using Siniestro.Servidor.Interfaces;
 using SiniestroCentralizadoGtoApi.Modelos;
 
@@ -10,6 +11,9 @@ builder.Services.AddDbContext<SiniestrosContext>(opt => opt.UseSqlServer(builder
 builder.Services.AddScoped<ISucursalServices, SucursalService>();
 builder.Services.AddScoped<IPolizaServices, PolizaServices>();
 builder.Services.AddScoped<IReporteServices, ReporteServices>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddAutoMapper(typeof(UsuarioProfile));  
+
 
 builder.Services.AddControllers();
 
@@ -17,8 +21,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowMyOrigin", policy =>
     {
-        // Permitir solicitudes desde tu frontend
-        policy.WithOrigins("https://localhost:7261") // Asegúrate de que sea el origen correcto
+        
+        policy.WithOrigins("https://localhost:7261") 
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -29,6 +33,8 @@ builder.Services.AddCors(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 var app = builder.Build();
 

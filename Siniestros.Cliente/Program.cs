@@ -11,8 +11,10 @@ namespace Siniestros.Cliente
                 client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]);
             });
 
+            builder.Services.AddSession();
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            
 
             var app = builder.Build();
 
@@ -28,12 +30,14 @@ namespace Siniestros.Cliente
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession();
             app.UseAuthorization();
+            app.MapControllers(); 
+
 
             app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Sucursal}/{action=Index}/{id?}");
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}");
 
             app.Run();
 

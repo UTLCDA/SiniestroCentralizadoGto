@@ -65,13 +65,14 @@ namespace Siniestros.Cliente.Controllers
                     FechaFinPoliza = poliza.FechaFinVigencia;
                     UltimoPago = poliza.UltimoPago;
                 }
-                if (Estatus.Contains("Pendiente"))
+                if (Estatus.ToUpper() == "PENDIENTE")
                 {
+                    ViewData["ErrorMessage"] = $"La poliza # {reporte.PolizaId} tiene un pago pendiente, favor de hacer el pago correspondiente, fecha de ultimo pago {UltimoPago}";
                     return View(reporte); // mensaje personalizado de que su poliza 
                     // hace falta el pago correspondiente de su poliza {} su ultima fecha de pago fue {}
                 }
 
-                if (FechaInicioPoliza.HasValue && FechaFinPoliza.HasValue && Estatus.ToUpper() == "PAGADA")
+                if (FechaInicioPoliza.HasValue && FechaFinPoliza.HasValue && Estatus.ToUpper() == "PAGADO")
                 {
                     DateTime inicio = FechaInicioPoliza.Value.ToDateTime(TimeOnly.MinValue);
                     DateTime fin = FechaFinPoliza.Value.ToDateTime(TimeOnly.MaxValue);
@@ -80,16 +81,25 @@ namespace Siniestros.Cliente.Controllers
                     {
                         esVigente = true;
                     }
+                    if (!esVigente)
+                    {
+                        ViewData["ErrorMessage"] = $"La poliza # {reporte.PolizaId} esta fuera de rango. Fecha Siniestro {reporte.FechaSiniestro} , Fecha Inicio Poliza {FechaInicioPoliza} Fecha Fin Poliza {FechaFinPoliza}";
+                        return View(reporte);
+                    }
                 }
                 else
                 {
-                    return View(reporte); // mensaje de que la poliza no esta en el rango y / o no esta pagada
+                    ModelState.AddModelError(string.Empty, $"La poliza {reporte.PolizaId} esta fuera de rango.");
+                    ViewData["ErrorMessage"] = $"La poliza # {reporte.PolizaId} esta fuera de rango, Fecha Siniestro {reporte.FechaSiniestro} , Fecha Inicio Poliza {FechaInicioPoliza} Fecha Fin Poliza {FechaFinPoliza}";
+                    return View(reporte); 
                 }
             }
             else
             {
+
                 ModelState.AddModelError(string.Empty, $"Ocurrio un error al consultar la Poliza {reporte.PolizaId}, comuniquese con el Admon del sistema");
             }
+
             confirmacionReporte = reporte.EsCorrecto;
 
             if (ModelState.IsValid)
@@ -101,19 +111,21 @@ namespace Siniestros.Cliente.Controllers
                 var json = JsonConvert.SerializeObject(reporte);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var respuesta = await _httpClient.PostAsync("/api/Reporte/AltaReporte", content);
+                
                 if(confirmacionReporte == true)
                 {
+                    var respuesta = await _httpClient.PostAsync("/api/Reporte/AltaReporte", content);
                     if (respuesta.IsSuccessStatusCode)
                     {
                         return RedirectToAction("Index");
                     }
                     else
                     {
+                        ViewData["ErrorMessage"] = "Error al crear el reporte";
                         ModelState.AddModelError(string.Empty, "Error al crear el reporte");
                     }
                 }
-                // mensaje de que faltan corregir los datos.
+                ViewData["ErrorMessage"] = "Favor de Validar los datos correctamente con el Contratante";
             }
             return View(reporte);
         }
