@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Cliente.Models.SucursalVista>
+
+@{
+    ViewData["Title"] = "Sucursales";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Detalle de Sucursales</h2>
+        <a asp-action="Alta" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Alta de Sucursal
+        </a>
+    </div>
+
+    <table id="sucursalesTable" class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Código Postal</th>
+                <th>Ciudad</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.Direccion</td>
+                    <td>@item.Telefono</td>
+                    <td>@item.CodigoPostal</td>
+                    <td>@item.Ciudad</td>
+                    <td>@item.Estado</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#sucursalesTable').DataTable({
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                }
+            });
+        });
+    </script>
+}

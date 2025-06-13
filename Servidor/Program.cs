@@ -1,0 +1,71 @@
+using Microsoft.EntityFrameworkCore;
+using Servidor;
+using Servidor.Interfaces;
+using Servidor.Modelos;
+
+var builder = WebApplication.CreateBuilder(args);
+
+
+// Add services to the container.
+builder.Services.AddDbContext<SiniestrosContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("cadenaSQL")));
+builder.Services.AddScoped<ISucursalServices, SucursalService>();
+builder.Services.AddScoped<IPolizaServices, PolizaServices>();
+builder.Services.AddScoped<IReporteServices, ReporteServices>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddAutoMapper(typeof(UsuarioProfile));  
+
+
+builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMyOrigin", policy =>
+    {
+        
+        policy.WithOrigins("https://localhost:7261") 
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+//            ValidIssuer = "HDI",
+//            ValidAudience = "SINIESTROS",
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Pepita"))
+//        };
+//    });
+
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+var app = builder.Build();
+
+app.UseCors("AllowMyOrigin");
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
