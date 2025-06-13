@@ -1,0 +1,218 @@
+﻿@model Servidor.Modelos.Reporte
+
+@{
+    ViewData["Title"] = "Alta de Siniestro";
+    var errorMessage = ViewData["ErrorMessage"] as string;
+}
+
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+<div class="container mt-4  mb-5">
+    <div class="card shadow rounded p-4">
+        <form asp-action="Alta"  method="post">
+
+            <div class="form-group mb-3">
+                <label asp-for="PolizaId" class="form-label">Póliza</label>
+                <input asp-for="PolizaId" class="form-control" placeholder="ID de Póliza" id="inputPoliza" />
+                <span asp-validation-for="PolizaId" class="text-danger"></span>
+
+                <div class="mt-2">
+                    <button type="button" class="btn btn-info btn-sm" onclick="consultarPoliza()">🔍 Consultar Póliza</button>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ContratanteId" class="form-label">Contratante</label>
+                <input asp-for="ContratanteId" class="form-control" id="inputContratante"  />
+                <span asp-validation-for="ContratanteId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="VehiculoId" class="form-label">Vehículo</label>
+                <input asp-for="VehiculoId" class="form-control" id="inputVehiculo"  />
+                <span asp-validation-for="VehiculoId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="SucursalId" class="form-label">Sucursal</label>
+                <input asp-for="SucursalId" class="form-control" id="inputSucursal"  />
+                <span asp-validation-for="SucursalId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="AjustadorId" class="form-label">Ajustador</label>
+                <select asp-for="AjustadorId" class="form-control" id="AjustadorId" disabled>
+                    <option value="@Context.Session.GetInt32("IdUsuario")">@Context.Session.GetInt32("IdUsuario")</option>
+                </select>
+                <span asp-validation-for="AjustadorId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="FechaSiniestro" class="form-label">Fecha del Siniestro</label>
+                <input asp-for="FechaSiniestro" class="form-control" type="date" />
+                <span asp-validation-for="FechaSiniestro" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="LugarSiniestroDireccion" class="form-label">Dirección del Siniestro</label>
+                <input asp-for="LugarSiniestroDireccion" class="form-control" />
+                <span asp-validation-for="LugarSiniestroDireccion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="LugarSiniestroCoordenadas" class="form-label">Coordenadas del Siniestro</label>
+                <input asp-for="LugarSiniestroCoordenadas" class="form-control" />
+                <span asp-validation-for="LugarSiniestroCoordenadas" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Taller" class="form-label">Taller</label>
+                <input asp-for="Taller" class="form-control" />
+                <span asp-validation-for="Taller" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Responsable" class="form-label">Responsable Taller</label>
+                <input asp-for="Responsable" class="form-control" />
+                <span asp-validation-for="Responsable" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NumSiniestro" class="form-label">Número de Siniestro</label>
+                <input asp-for="NumSiniestro" class="form-control" />
+                <span asp-validation-for="NumSiniestro" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="FolioReporte" class="form-label">Folio de Reporte</label>
+                <input asp-for="FolioReporte" class="form-control" />
+                <span asp-validation-for="FolioReporte" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="TelefonoPropietrio" class="form-label">Teléfono del Propietario</label>
+                <input asp-for="TelefonoPropietrio" class="form-control" id="inputTelefono" />
+                <span asp-validation-for="TelefonoPropietrio" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NombreAsegurado" class="form-label">Nombre del Asegurado</label>
+                <input asp-for="NombreAsegurado" class="form-control" />
+                <span asp-validation-for="NombreAsegurado" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NombrePropietario" class="form-label">Nombre del Propietario</label>
+                <input asp-for="NombrePropietario" class="form-control" id="inputNombrePropietario" />
+                <span asp-validation-for="NombrePropietario" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mb-3">
+                <input asp-for="AplicaDeducible" class="form-check-input" />
+                <label asp-for="AplicaDeducible" class="form-check-label">¿Aplica deducible?</label>
+                <span asp-validation-for="AplicaDeducible" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PorcentajeDeducible" class="form-label">Porcentaje del Deducible</label>
+                <input asp-for="PorcentajeDeducible" class="form-control" />
+                <span asp-validation-for="PorcentajeDeducible" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DescripcionSiniestro" class="form-label">Descripción del Siniestro</label>
+                <textarea asp-for="DescripcionSiniestro" class="form-control"></textarea>
+                <span asp-validation-for="DescripcionSiniestro" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ObservacionesAjustador" class="form-label">Observaciones del Ajustador</label>
+                <textarea asp-for="ObservacionesAjustador" class="form-control"></textarea>
+                <span asp-validation-for="ObservacionesAjustador" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mb-4">
+                <input asp-for="EsCorrecto" class="form-check-input" />
+                <label asp-for="EsCorrecto" class="form-check-label">¿Es Correcto?</label>
+                <span asp-validation-for="EsCorrecto" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">← Cancelar</a>
+                <button type="submit" class="btn btn-primary" >✅ Guardar Siniestro</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@* <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que los datos ingresados son correctos?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Revisar</button>
+                <button type="button" class="btn btn-primary" onclick="enviarFormulario()">Aceptar y continuar</button>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        function consultarPoliza() {
+            debugger
+            const polizaId = document.getElementById('inputPoliza').value;
+            if (!polizaId) {
+                alert("Por favor, ingresa un ID de Póliza válido.");
+                return;
+            }
+
+            // Aquí podrías hacer una llamada AJAX, por ejemplo con fetch:
+            fetch(`https://localhost:7102/api/Poliza/NumeroPolizaLinq?cadena=${polizaId}`)
+                .then(response => {
+                    // Verificar si la respuesta es exitosa (status 200)
+                    if (!response.ok) {
+                        throw new Error('No se pudo obtener la póliza. Código de error: ' + response.status);
+                    }
+                    return response.json();  // Parsear la respuesta JSON
+                })
+                .then(data => {
+                    if (data) {
+                        const poliza = data[0];
+                        const contratante = poliza.contratante;
+                        document.getElementById("inputContratante").value = poliza.contratanteId;
+                        document.getElementById("inputVehiculo").value = poliza.vehiculoId;
+                        document.getElementById("inputSucursal").value = poliza.oficinaEmisionId;
+                        document.getElementById("inputTelefono").value = contratante.telefono;
+                        document.getElementById("inputNombrePropietario").value = contratante.nombre + " " + contratante.apellidoPaterno + " " + contratante.apellidoMaterno;
+                    } else {
+                        alert("No se encontró la póliza.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al consultar:", error);
+                    alert("Ocurrió un error al consultar la póliza.");
+                });
+        }
+    </script>
+   @*  <script>
+        function enviarFormulario() {
+            document.getElementById('formGuardarSiniestro').submit();
+        }
+    </script> *@
+
+}

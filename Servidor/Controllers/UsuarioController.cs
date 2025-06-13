@@ -1,0 +1,47 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Servidor.Dtos;
+using Servidor.Interfaces;
+
+namespace Servidor.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsuarioController : ControllerBase
+    {
+        private readonly IUsuarioService _usuarioService;
+
+        public UsuarioController(IUsuarioService usuarioService)
+        {
+            _usuarioService = usuarioService;
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequest)
+        {
+            if (loginRequest == null || string.IsNullOrEmpty(loginRequest.NumeroEmpleado) || string.IsNullOrEmpty(loginRequest.Contrasena))
+            {
+                return BadRequest("Número de empleado y contraseña son requeridos.");
+            }
+
+            try
+            {
+                var usuario = await _usuarioService.LoginAsync(loginRequest);
+
+                //var token = GenerarJwtToken(usuario);
+
+                //Response.Headers.Add("Authorization", $"Bearer {token}");
+
+                return Ok(usuario);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Unauthorized("Credenciales incorrectas.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno: {ex.Message}");
+            }
+        }
+    }
+}

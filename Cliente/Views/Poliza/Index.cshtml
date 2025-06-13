@@ -1,0 +1,135 @@
+﻿@model IEnumerable<Cliente.Models.PolizaVistaModelo>;
+
+@{
+    ViewData["Title"] = "Listado de Pólizas";
+}
+
+<h2>Buscar Póliza</h2>
+
+<form method="get" asp-controller="Poliza" asp-action="Index" class="mb-4">
+    <input type="text" id="valorBusqueda" name="valorBusqueda" placeholder="Buscar..." class="form-control d-inline w-auto" />
+
+    <select name="tipoBusqueda" id="tipoBusqueda" class="form-select d-inline w-auto mx-2">
+        <option value="NumeroPoliza">Número de Póliza</option>
+        <option value="NombreBeneficiario">Nombre del Beneficiario</option>
+    </select>
+
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive mt-4 shadow rounded-4">
+        <table class="table table-striped table-hover align-middle text-center mb-0">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">Número de Póliza</th>
+                    <th scope="col">Beneficiario</th>
+                    <th scope="col">Línea de Negocio</th>
+                    <th scope="col">Oficina de Emisión</th>
+                    <th scope="col">Contratante</th>
+                    <th scope="col">Fecha Inicio Vigencia</th>
+                    <th scope="col">Fecha Fin Vigencia</th>
+                    <th scope="col">Fecha Emisión</th>
+                    <th scope="col">Último Pago</th>
+                    <th scope="col">Estatus</th>
+                    <th scope="col">Periodicidad</th>
+                    <th scope="col">Modelo</th>
+                    <th scope="col">Placas</th>
+                    <th scope="col">Número Serie</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.NumeroPoliza</td>
+                        <td>@item.Beneficiario</td>
+                        <td>@item.LineaNegocio</td>
+                        <td>@item.OficinaEmision?.Nombre</td>
+                        <td>@(item.Contratante?.Nombre + " " + item.Contratante?.ApellidoMaterno + " " + item.Contratante?.ApellidoMaterno)</td>
+                        <td>@item.FechaInicioVigencia.ToString("dd/MM/yyyy")</td>
+                        <td class="@(item.FechaFinVigencia < DateOnly.FromDateTime(DateTime.Today) ? "text-danger fw-bold" : "")">
+                            @item.FechaFinVigencia.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>@item.FechaEmision.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @(item.UltimoPago.HasValue && item.UltimoPago.Value != new DateOnly(1900, 1, 1)
+                                ? item.UltimoPago.Value.ToString("dd/MM/yyyy")
+                                : "")
+                        </td>
+                        <td class="@(item.Estatus == "Pagado" ? "text-success fw-bold" : item.Estatus == "Pendiente" ? "text-warning fw-bold" : "")">
+                            @item.Estatus
+                        </td>
+                        <td>@item.Periodicidad?.Tipo</td>
+                        <td>@item.Vehiculo?.Modelo</td>
+                        <td>@item.Vehiculo?.Placas</td>
+                        <td>@item.Vehiculo?.NumeroSerie</td>
+                       
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="modal fade" id="noResultsModal" tabindex="-1" role="dialog" aria-labelledby="noResultsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="noResultsModalLabel">Sin resultados encontrados</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    No se encontraron pólizas con el término de búsqueda:
+                    <strong id="valorBusquedaModal"></strong>.
+                    <br />
+                    Por favor verifica el dato ingresado o intenta con otro criterio.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        const tipoBusqueda = document.getElementById('tipoBusqueda');
+        const valorBusqueda = document.getElementById('valorBusqueda');
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var noResults = @Model.Count() == 0 ? true : false;
+
+            if (noResults) {
+                var valorBusqueda = document.getElementById("valorBusqueda")?.value || "(vacío)";
+                document.getElementById("valorBusquedaModal").innerText = valorBusqueda;
+
+                var myModal = new bootstrap.Modal(document.getElementById('noResultsModal'));
+                myModal.show();
+            }
+        });
+
+        tipoBusqueda.addEventListener('change', () => {
+            valorBusqueda.value = ''; // Limpiar campo al cambiar el tipo
+        });
+
+        valorBusqueda.addEventListener('input', function () {
+            const tipo = tipoBusqueda.value;
+
+            if (tipo === 'NumeroPoliza') {
+                // Solo permitir números
+                this.value = this.value.replace(/[^0-9]/g, '');
+            } else if (tipo === 'NombreBeneficiario') {
+                // Solo permitir letras (con acentos, ñ y espacios)
+                this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+            }
+        });
+
+        
+    </script>
+}
